@@ -13,7 +13,7 @@
 <body>
 <h1>LoA Generator</h1>
 
-<a aria-label="View source on GitHub" class="github-corner" href="https://github.com/natesales/loa-generator">
+<a aria-label="View source on GitHub" class="github-corner" href="https://github.com/kevinjone25/law-loa-generator">
     <svg aria-hidden="true" height="80"
          style="fill:#fff; color:#151513; position: absolute; top: 0; border: 0; right: 0;"
          viewBox="0 0 250 250" width="80">
@@ -29,56 +29,56 @@
 
 <div id="form">
     <label>
-        ASN*
+        ASN<span class="req">*</span>
         <input id="form-asn" onblur="load_peeringdb_data()" placeholder="65530" required type="number">
     </label>
 
     <label>
-        Network Name*
+        Network Name<span class="req">*</span>
         <input id="form-network-name" required type="text">
     </label>
 
     <br>
 
     <label>
-        Peer ASN*
-        <input id="form-peer-asn" onblur="load_peeringdb_data()" placeholder="65531" required type="number">
+        Peer ASN
+        <input id="form-peer-asn" onblur="load_peeringdb_data()" placeholder="9267" value="9267" type="number" readonly>
     </label>
 
     <label>
-        Peer Name*
-        <input id="form-peer-name" required type="text">
+        organization name (RIR)<span class="req">*</span>
+        <input id="form-organization-name" required type="text">
     </label>
 
     <br>
 
     <label>
-        Contact Name*
+        Representative<span class="req">*</span>
         <input id="form-contact-name" placeholder="John Doe" required type="text">
     </label>
 
     <label>
-        Contact Email*
+        NOC Contact Email<span class="req">*</span>
         <input id="form-email" placeholder="noc@example.com" required type="email">
     </label>
 
     <br>
 
     <label>
-        Contact Phone
+        Contact Phone<span class="req">*</span>
         <input id="form-phone" placeholder="+1 (123) 456 7890" type="text">
     </label>
 
     <label>
-        Date*
-        <input id="form-date" required type="date">
+        Date
+        <input id="form-date" required  type="date" readonly>
     </label>
 
     <br>
 
     <label>
-        Prefixes*
-        <textarea id="form-prefixes" placeholder="192.0.2.0/24\n203.0.113.0/24 origin 65590\n2001:db8::/32 le 48" required></textarea>
+        Prefixes and as-path<span class="req">*</span>
+        <textarea id="form-prefixes" placeholder="192.0.2.0/24\n203.0.113.0/24 origin 65520\n2001:db8::/32 le 48" required></textarea>
     </label>
 
     <label>
@@ -88,59 +88,27 @@
 
     <br>
 
-    <label>
-        Network Logo
-        <input alt="Network Logo" id="form-logo" type="file"/>
-    </label>
-
-    <img alt="" id="logo-preview" style="display: none"/>
+    <img alt="" id="logo-preview"  style="display: none" src="itlabnet.png"/>
 
     <div class="flex-row">
-        <div>
-            <h4>Generate PDF</h4>
-
-            <!-- Save PDF -->
-            <button onclick="save_pdf_loa()">
-                <svg class="i-import" fill="none" height="16" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 32 32" width="16">
-                    <path d="M28 22 L28 30 4 30 4 22 M16 4 L16 24 M8 16 L16 24 24 16"></path>
-                </svg>
-            </button>
-
-            <!-- Open PDF -->
-            <button onclick="open_pdf_loa()">
-                <svg class="i-external" fill="none" height="16" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 32 32" width="16">
-                    <path d="M14 9 L3 9 3 29 23 29 23 18 M18 4 L28 4 28 14 M28 4 L14 18"></path>
-                </svg>
-            </button>
-        </div>
-
         <div>
             <h4>Reset LoA</h4>
 
             <button onclick="reset_loa()">
-                <svg class="i-trash" fill="none" height="16" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 32 32" width="16">
-                    <path d="M28 6 L6 6 8 30 24 30 26 6 4 6 M16 12 L16 24 M21 12 L20 24 M11 12 L12 24 M12 6 L13 2 19 2 20 6"></path>
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" height="14" width="14" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#ffffff" d="M463.5 224H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5z"/></svg>
             </button>
         </div>
-
         <div>
-            <h4>Generate plaintext</h4>
-
-            <!-- Save text -->
-            <button onclick="gen_text_loa(true)">
-                <svg class="i-import" fill="none" height="16" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 32 32" width="16">
+            <h4>Generate PDF</h4>
+            <!-- Save PDF -->
+            <button onclick="save_pdf_loa()">
+                <svg class="i-import" fill="none" height="16" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 32 32" width="16" >
                     <path d="M28 22 L28 30 4 30 4 22 M16 4 L16 24 M8 16 L16 24 24 16"></path>
                 </svg>
             </button>
-
-            <!-- Open text -->
-            <button onclick="gen_text_loa(false)">
-                <svg class="i-external" fill="none" height="16" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 32 32" width="16">
-                    <path d="M14 9 L3 9 3 29 23 29 23 18 M18 4 L28 4 28 14 M28 4 L14 18"></path>
-                </svg>
-            </button>
         </div>
+
+
     </div>
 </div>
 </body>

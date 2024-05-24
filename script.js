@@ -7,10 +7,6 @@ window.onload = function () {
         elem.placeholder = elem.placeholder.replace(/\\n/g, "\n");
     });
 
-    // Bind image load handler
-    let img = document.getElementById("form-logo");
-    img.addEventListener("change", load_image, false);
-
     // document.getElementById("form-prefixes").value = "192.0.2.0/24\n2001:db8::/48";
     // document.getElementById("form-network-name").value = "Example Network";
     // document.getElementById("form-asn").value = 65530;
@@ -25,16 +21,13 @@ window.onload = function () {
 function reset_loa() {
     document.getElementById("form-prefixes").value = "";
     document.getElementById("form-network-name").value = "";
+    document.getElementById("form-organization-name").value = "";
     document.getElementById("form-asn").value = "";
-    document.getElementById("form-peer-name").value = "";
-    document.getElementById("form-peer-asn").value = "";
     document.getElementById("form-contact-name").value = "";
     document.getElementById("form-email").value = "";
     document.getElementById("form-phone").value = "";
     document.getElementById("form-notes").value = "";
-    document.getElementById("form-logo").value = "";
-    document.getElementById("logo-preview").src = "";
-    document.getElementById("logo-preview").style.display = "none";
+
 }
 
 function date_string() {
@@ -82,7 +75,7 @@ function load_peeringdb_data() {
 
 function generate_loa() {
     let prefixes = document.getElementById("form-prefixes").value.replace(/(\r\n|\r|\n){2}/g, "$1").replace(/(\r\n|\r|\n){3,}/g, "$1\n").replace(/\n+$/, ""); // Remove duplicate newlines
-    let peer_name = document.getElementById("form-peer-name").value;
+    let organization_name = document.getElementById("form-organization-name").value;
     let peer_asn = document.getElementById("form-peer-asn").value.toUpperCase().replace("AS", "");
     let date = document.getElementById("form-date").value;
     let name = document.getElementById("form-network-name").value;
@@ -91,16 +84,18 @@ function generate_loa() {
     let contact_email = document.getElementById("form-email").value;
     let contact_phone = document.getElementById("form-phone").value;
     let notes = document.getElementById("form-notes").value.replace(/\n+$/, ""); // Remove trailing newline
+    let nowDate = new Date(date).toLocaleDateString();
 
-    let loa_body = new Date(date).toLocaleDateString() + `
+    let loa_body =  `
 
 To whom it may concern,
 
-This letter serves to authorize AS${peer_asn} (${peer_name}) to announce the following IP address blocks:
+
+This letter serves to authorize AS${peer_asn}  to announce the following IP address blocks:
 
 ${prefixes}
 
-As a representative of AS${asn} (${name}) that is the owner of the prefix(es) and/or ASN, I hereby affirm that I'm authorized to represent and sign for this LOA.
+As a representative of the above IP block(s) and AS${asn} (${name}),  I hereby declare that my organization ${organization_name} (whom is authorized to use such internet resources), to sign for this LOA. All traffic comes from this AS number is fully responsible by my organization.  AS9267 and/or AS38254 operator(s) does not control, and are not responsible for any content that this ASN transmits through the testbed infrastructure. My organization also understands that the academic and/or commercial network transit service(s) provided by AS9267 and/or AS38254 may revoke/terminate by the operator(s) at any time for any reason without notice.
 `
 
     if (notes !== "") {
@@ -108,16 +103,22 @@ As a representative of AS${asn} (${name}) that is the owner of the prefix(es) an
     }
 
     loa_body += `
-Should you have questions about this request, email ` + contact_email
 
-    if (contact_phone !== "") {
-        loa_body += " or call " + contact_phone
-    }
+Should you have any questions, please contact: 
 
-    loa_body += `.
+E-mail: ${contact_email}
+Phone: ${contact_phone}
 
 Sincerely,
-` + contact_name
+
+
+                                                                                        (signature)
+___________________________________________
+
+Name: ${contact_name}
+Date: ${nowDate}
+
+`
 
     return loa_body
 }
@@ -157,16 +158,25 @@ function loa_pdf_doc() {
         body_height = 60;
 
         let target_height = 20;
-        let target_width = (logo.clientWidth / logo.clientHeight) * target_height;
+        let target_width = (logo.width / logo.height) * target_height;
         doc.addImage(logo.src, 20, 20, target_width, target_height, "NONE", 0);
     }
 
     doc.setFontSize(20);
-    doc.text(20, header_height, "Letter of Authorization");
+    doc.text(125, 35 ,"Letter of Authorization");
+
+    doc.setFontSize(20);
+    doc.text(20, 39,  "_____________________________________________");
 
     doc.setFontSize(12);
     let loa_body = generate_loa();
-    doc.text(20, body_height, doc.splitTextToSize(loa_body, 180));
+    doc.text(20, body_height, doc.splitTextToSize(loa_body, 175));
+
+
+    doc.setFontSize(8);
+    doc.setTextColor("gray");
+    doc.text(20, 280, "Note: The applicant is required to sign the hardcopy document and subsequently scan it as a PDF for submission."+ "\n" + "Electronic signature is not accepted.Thank you for the cooperation.");
+
     return doc
 }
 
