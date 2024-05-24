@@ -6,16 +6,6 @@ window.onload = function () {
     Array.prototype.forEach.call(document.getElementsByTagName("textarea"), function (elem) {
         elem.placeholder = elem.placeholder.replace(/\\n/g, "\n");
     });
-
-    // document.getElementById("form-prefixes").value = "192.0.2.0/24\n2001:db8::/48";
-    // document.getElementById("form-network-name").value = "Example Network";
-    // document.getElementById("form-asn").value = 65530;
-    // document.getElementById("form-peer-name").value = "Example Peer";
-    // document.getElementById("form-peer-asn").value = 65510;
-    // document.getElementById("form-contact-name").value = "Example User";
-    // document.getElementById("form-email").value = "noc@example.com";
-    // document.getElementById("form-phone").value = "000 000 0000";
-    // document.getElementById("form-notes").value = "This\nis\na\ntest";
 }
 
 function reset_loa() {
@@ -123,28 +113,6 @@ Date: ${nowDate}
     return loa_body
 }
 
-function gen_text_loa(download) {
-    if (!form_ok()) {
-        return
-    }
-
-    let peer_asn = document.getElementById("form-peer-asn").value.toUpperCase().replace("AS", "");
-    let loa_body = "Letter of Authorization\n\n" + generate_loa();
-    let target_text = "data:text/plain;charset=utf-8," + encodeURIComponent(loa_body);
-
-    if (download) {
-        let element = document.createElement("a");
-        element.style.display = "none";
-        element.setAttribute("href", target_text);
-        element.setAttribute("download", "LoA_AS" + peer_asn + "_" + date_string() + ".txt");
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-    } else {
-        alert(loa_body)
-    }
-}
-
 function loa_pdf_doc() {
     let doc = new jspdf.jsPDF();
 
@@ -188,24 +156,4 @@ function save_pdf_loa() {
     let doc = loa_pdf_doc();
     let peer_asn = document.getElementById("form-peer-asn").value.toUpperCase().replace("AS", "");
     doc.save("LoA_AS" + peer_asn + "_" + date_string() + ".pdf");
-}
-
-function open_pdf_loa() {
-    if (!form_ok()) {
-        return
-    }
-
-    let doc = loa_pdf_doc();
-    doc.output('dataurlnewwindow');
-}
-
-function load_image(e) {
-    let logo_preview = document.getElementById("logo-preview");
-    logo_preview.style.display = "block";
-
-    let reader = new FileReader();
-    reader.onload = function (event) {
-        logo_preview.src = event.target.result;
-    }
-    reader.readAsDataURL(e.target.files[0]);
 }
